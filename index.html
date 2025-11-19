@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>下拉式選單時刻表</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .schedule-box { margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; background: #fafafa; }
+    .hidden { display: none; }
+    h2 { margin-top: 0; }
+    /* 小調整：讓時間欄位固定寬度，方便對齊 */
+    .time { display: inline-block; width: 90px; }
+  </style>
+</head>
+<body>
+  <h1>選擇車次</h1>
+
+  <label for="busSelect" class="sr-only">選擇車次</label>
+  <select id="busSelect">
+    <option value="">請選擇車次...</option>
+    <option value="A">A 車</option>
+    <option value="B">B 車</option>
+    <option value="C">行程</option>
+  </select>
+
+  <div id="scheduleA" class="schedule-box hidden">
+    <h2>A 車時刻表</h2>
+    <ul>
+      <li><span class="time" style="color:#d9534f; font-weight:bold;">6:40 AM</span> 捷運西門站6號出口</li>
+      <li><span class="time" style="color:#d9534f; font-weight:bold;">9:00 AM</span> 臺灣大道（台中商旅）</li>
+      <li><span class="time" style="color:#d9534f; font-weight:bold;">9:20 AM</span> 志忠 王田交流道（阿蓮全精緻自助餐）</li>
+      <li><span class="time" style="color:#d9534f; font-weight:bold;">13:30 PM</span> 關子嶺［千鶴溫泉］（視當天路況）</li>
+    </ul>
+  </div>
+
+  <div id="scheduleB" class="schedule-box hidden">
+    <h2>B 車時刻表</h2>
+    <ul>
+      <li><span class="time" style="color:#d9534f; font-weight:bold;">6:40 AM</span> 捷運西門站6號出口</li>
+      <li><span class="time" style="color:#d9534f; font-weight:bold;">7:30 AM</span> 桃園 南崁 長榮航空旁 天香回味火鍋 (桃園市蘆竹區新南路一段128號）</li>
+      <li><span class="time" style="color:#d9534f; font-weight:bold;">8:30 AM</span> 新竹光復路 摩斯漢堡 清華店（新竹市東區光復路二段396號）</li>
+      <li><span class="time" style="color:#d9534f; font-weight:bold;">13:30 PM</span> 關子嶺［千鶴溫泉］（視當天路況）</li>
+    </ul>
+  </div>
+
+  <div id="scheduleC" class="schedule-box hidden">
+    <h2>行程內容</h2>
+    <pre style="white-space: pre-wrap; font-family: inherit;">
+DAY 1
+台北西門出發～沿途接駁～南投竹山［紫南宮］
+午餐：竹山吉祥樓餐廳
+關子嶺［千鶴溫泉］行李入房後隨即進大眾湯開始活動～
+PM 5:30 大門口上遊覽車前往新溪邊餐廳享用晚餐～
+餐後返回千鶴各種PPLL
+
+DAY 2
+晨喚 早餐後9:20出發～
+大林［佐登妮絲城堡］遊園參觀
+午餐：園區內自理～
+民雄 KHTOY 絨毛玩偶旗艦館～
+圓滿賦歸！
+    </pre>
+  </div>
+
+  <!-- 合併為單一 <script>，避免重複宣告同一個變數造成錯誤 -->
+  <script>
+    // 只在這裡宣告一次變數
+    const busSelect = document.getElementById('busSelect');
+    const scheduleA = document.getElementById('scheduleA');
+    const scheduleB = document.getElementById('scheduleB');
+    const scheduleC = document.getElementById('scheduleC');
+
+    function hideAll() {
+      scheduleA.classList.add('hidden');
+      scheduleB.classList.add('hidden');
+      scheduleC.classList.add('hidden');
+    }
+
+    // 初始狀態（如果需要預設選項可在這裡設定）
+    hideAll();
+
+    busSelect.addEventListener('change', () => {
+      const value = busSelect.value;
+      hideAll();
+
+      if (value === 'A') scheduleA.classList.remove('hidden');
+      if (value === 'B') scheduleB.classList.remove('hidden');
+      if (value === 'C') scheduleC.classList.remove('hidden');
+    });
+
+    // 可選：支援鍵盤快速切換（左右/上下切換示範）
+    busSelect.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') {
+        const event = new Event('change');
+        busSelect.dispatchEvent(event);
+      }
+    });
+  </script>
+</body>
+</html>
