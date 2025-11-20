@@ -45,12 +45,12 @@
             outline: none;
         }
         select:focus {
-            border-color: #007BFF;
+            border-color: #28a745; /* 綠色邊框 */
         }
         button {
             width: 100%;
             padding: 12px;
-            background-color: #28a745;
+            background-color: #28a745; /* 綠色按鈕 */
             color: white;
             border: none;
             border-radius: 5px;
@@ -83,7 +83,7 @@
             margin: 5px 0;
             padding: 10px 15px;
             border-radius: 5px;
-            border-left: 5px solid #28a745;
+            border-left: 5px solid #28a745; /* 綠色左邊框 */
             color: #333;
             font-size: 15px;
         }
@@ -124,7 +124,7 @@
     </div>
 
     <div class="form-group">
-        <label for="myBody">2. 我的體型</label>
+        <label for="myBody">2. 我的體型 </label>
         <select id="myBody">
             <option value="熊">熊🐻</option>
             <option value="猴">猴🐒</option>
@@ -148,16 +148,17 @@
     </div>
     
     <div class="note">
-        <strong>使用說明：</strong><br>
-        系統會將「名字」進行比對。如果角色名單和體型名單中，名字的寫法（包含特殊符號）不完全一致，可能會導致無法顯示。
-        <br><strong>注意：</strong>現在選擇「不分」時，會同時搜尋「1號、0號、不分」名單。
+        <strong>規則說明：</strong><br>
+        1. <strong>角色：</strong>不分會同時搜尋 1號、0號及不分。<br>
+        2. <strong>體型：</strong>根據你指定的「自己」與「喜歡」的組合，自動抓取對應的名單進行交叉比對。<br>
+        <small>(例如：自己熊+喜歡猴 -> 搜尋「猴喜熊」名單)</small>
     </div>
 </div>
 
 <script>
     // --- 資料庫 ---
     
-    // 角色分類資料 (更新版)
+    // 角色分類資料 (包含最新更新)
     const roleData = {
         "1號": [
             "詹Cos", "小秉", "阿任", "George", "By-n", "Hsu", "志忠", "阿翰", 
@@ -225,17 +226,14 @@
 
         resultListEl.innerHTML = ""; // 清空結果
 
-        // 1. 根據角色規則，取得初步「角色候選名單」
+        // 1. 條件一：角色篩選邏輯
         let roleCandidates = [];
-        
         if (userRole === "1") {
-            // 一號 -> 列出 不分、0號
             roleCandidates = [...roleData["不分"], ...roleData["0號"]];
         } else if (userRole === "0") {
-            // 0號 -> 列出 不分、一號
             roleCandidates = [...roleData["不分"], ...roleData["1號"]];
-        } else if (userRole === "0.5") { 
-            // 不分 -> 列出 一號、0號、以及不分 (這是新規則)
+        } else if (userRole === "0.5") { // 不分
+            // 規則更新：不分列出一號、0號、以及不分名單
             roleCandidates = [...roleData["1號"], ...roleData["0號"], ...roleData["不分"]];
         } else if (userRole === "Side") {
             roleCandidates = [...roleData["Side"]];
@@ -243,20 +241,31 @@
             roleCandidates = [...roleData["純69"]];
         }
 
-        // 2. 根據體型規則，取得初步「體型候選名單」
+        // 2. 條件二：體型篩選邏輯
         let typeCandidates = [];
 
+        // 熊 + 熊 -> 列出 熊喜熊
         if (myBody === "熊" && prefBody === "熊") {
             typeCandidates = [...typeData["熊喜熊"]];
-        } else if (myBody === "熊" && prefBody === "猴") {
-            typeCandidates = [...typeData["熊喜猴"]];
-        } else if (myBody === "猴" && prefBody === "熊") {
+        } 
+        // 熊 + 猴 -> 列出 猴喜熊 (邏輯：自己是熊，找喜歡熊的猴子)
+        else if (myBody === "熊" && prefBody === "猴") {
             typeCandidates = [...typeData["猴喜熊"]];
-        } else if (myBody === "猴" && prefBody === "猴") {
+        } 
+        // 猴 + 熊 -> 列出 熊喜猴 (邏輯：自己是猴，找喜歡猴的熊)
+        else if (myBody === "猴" && prefBody === "熊") {
+            typeCandidates = [...typeData["熊喜猴"]];
+        } 
+        // 猴 + 猴 -> 列出 猴喜猴
+        else if (myBody === "猴" && prefBody === "猴") {
             typeCandidates = [...typeData["猴喜猴"]];
-        } else if (myBody === "猴" && prefBody === "都可") {
+        } 
+        // 猴 + 都可 -> 列出 猴喜猴 以及 熊猴都可
+        else if (myBody === "猴" && prefBody === "都可") {
             typeCandidates = [...typeData["猴喜猴"], ...typeData["熊猴都可"]];
-        } else if (myBody === "熊" && prefBody === "都可") {
+        } 
+        // 熊 + 都可 -> 列出 熊喜熊 以及 熊猴都可
+        else if (myBody === "熊" && prefBody === "都可") {
             typeCandidates = [...typeData["熊喜熊"], ...typeData["熊猴都可"]];
         }
 
@@ -264,12 +273,10 @@
         const normalize = (str) => str.replace(/\s+/g, '').toLowerCase();
         const typeSet = new Set(typeCandidates.map(name => normalize(name)));
 
-        // 篩選
         const finalResults = roleCandidates.filter(name => {
             return typeSet.has(normalize(name));
         });
 
-        // 去除重複
         const uniqueResults = [...new Set(finalResults)];
 
         // 4. 顯示結果
