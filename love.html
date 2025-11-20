@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的理想ㄆ友名單</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", "Heiti TC", Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+        }
+        select:focus {
+            border-color: #007BFF;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result-area {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .result-header {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+        .result-list {
+            list-style: none;
+            padding: 0;
+        }
+        .result-list li {
+            background: #f8f9fa;
+            margin: 5px 0;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border-left: 5px solid #28a745;
+            color: #333;
+            font-size: 15px;
+        }
+        .no-result {
+            color: #888;
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: #fff;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+        }
+        .note {
+            font-size: 13px;
+            color: #666;
+            margin-top: 20px;
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🌈 我的理想ㄆ友名單💦</h2>
+
+    <div class="form-group">
+        <label for="roleSelect">1. 我的角色 (尋找對象)</label>
+        <select id="roleSelect">
+            <option value="1">1號 (列出 0號、不分)</option>
+            <option value="0">0號 (列出 1號、不分)</option>
+            <option value="0.5">不分 (列出 1號、0號)</option>
+            <option value="Side">Side (列出 Side)</option>
+            <option value="69">純69 (列出 純69)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="myBody">2. 我的體型</label>
+        <select id="myBody">
+            <option value="熊">熊</option>
+            <option value="猴">猴</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="prefBody">3. 喜歡的體型</label>
+        <select id="prefBody">
+            <option value="熊">熊</option>
+            <option value="猴">猴</option>
+            <option value="都可">都可</option>
+        </select>
+    </div>
+
+    <button onclick="filterList()">🔍 開始篩選</button>
+
+    <div id="result-area">
+        <div class="result-header">以下是您感興趣的人：</div>
+        <ul id="resultList" class="result-list"></ul>
+    </div>
+    
+    <div class="note">
+        <strong>使用說明：</strong><br>
+        系統會將「名字」進行比對。如果在角色名單和體型名單中，名字的寫法（包含特殊符號、表情）不完全一致，可能會導致無法顯示。<br>
+        <small>例如："MF娃娃林" 與 "🌹𝓜𝓢 娃娃林" 會被視為不同人。</small>
+    </div>
+</div>
+
+<script>
+    // --- 更新後的資料庫 (來自你的新檔案) ---
+    
+    // 角色分類資料 (更新版)
+    const roleData = {
+        "1號": [
+            "詹Cos", "小秉", "阿任", "George", "By-n", "Hsu", "志忠", "阿翰", 
+            "🌹𝓜𝓢林罐罐1.0", "史宏弓ㄙ", "奧斯卡²", "耀天", "陳威成", "Parker Yang", 
+            "奧嵐多", "\"凱\"(^_-)", "鴻星🌟-HongXing", "DK", "勳", "JimYu", "🌹𝓜𝓢 娃娃林"
+        ],
+        "0號": [
+            "聒噪", "🐟", "貓貓貓", "毛怪Mao(*'へ'*)", "阿布", "保安", "🌹Lucas竣🌹", 
+            "Woody", "浩浩🐱", "Piccolo埃皮", "CKB", "小劉", "event(凱凱)", "逸倫", 
+            "柏丞 (39計程車)", "Alex吳維", "🌹俊曉", "XH𝓜𝓟🌹", "㫻ㄎㄨㄣˋ寶", 
+            "Jordy", "𝓜𝓢阿尼尼", "阿東"
+        ],
+        "不分": [
+            "阿布", "Dindon Lin", "Danny", "XuezheWu學哲", "aaron", "許哲維", 
+            "山姆🐳", "YusiangHong", "夏天+", "銘峻 Silas", "🍃", "Juan", "建億", 
+            "馬健綸", "撼震", "棕櫚樹LV1", "威廉", "Francis  🐢❤️🐻🐷", "翔太 / Sean", 
+            "💪輝仔🐒🐵", "林小許", "羅(Roger)", "Scott Huang", "名舜 Tim", "尤英任❄", 
+            "Foodpanda外送員-小雞", "Zhan Wen", "Naker", "黑皮の達", "VW boyuan", 
+            "👍宇哲/Adolph/阿麥❤️", "小皓", "約書亞", "Sheng", "小金阿傑", 
+            "資訊分組-Wei仔", "𝓛𝓾𝓬𝓪𝓼 宥朋"
+        ],
+        "Side": [
+            "Nick", "劉亦軒(小嵐Blue)", "端峻", "دDavid ♂茶米♂"
+        ],
+        "純69": [
+            "克寶J大寶", "小馬"
+        ]
+    };
+
+    // 體型分類資料 (維持原樣，根據第一個檔案)
+    const typeData = {
+        "熊喜熊": ["熊喜熊", "𝓛𝓾𝓬𝓪𝓼 宥朋", "撼震"],
+        "熊喜猴": [
+            "Dindon Lin", "Heng", "保安", "Nick", "阿翰", "建億", "翔太 / Sean", 
+            "Rex~和", "奧斯卡²", "Zhan Wen", "黑皮の達", "鴻星🌟-HongXing", 
+            "小皓", "DK", "約書亞", "🌹𝓜𝓢 娃娃林"
+        ],
+        "猴喜熊": [
+            "山姆🐳", "🍃", "陳威成", "耀天", "Francis  🐢❤️🐻🐷", "尤英任❄", 
+            "名舜 Tim", "Parker Yang", "資訊分組-Wei仔", "勳"
+        ],
+        "猴喜猴": [
+            "George", "Danny", "aaron", "Weiting", "聒噪", "YusiangHong", "By-n", 
+            "🐟", "李孟澤", "夏天+", "銘峻 Silas", "Woody", "Piccolo埃皮", "志忠", 
+            "Juan", "小劉", "小秉", "劉亦軒(小嵐Blue)", "威廉", "史宇弓ㄙ", 
+            "羅 (Roger)", "دDavid ♂茶米♂", "㫻ㄎㄨㄣˋ寶", "林小許", 
+            "奧嵐多", "Urban", "“凱”（^_-）"
+        ],
+        "熊猴都可": [
+            "阿布", "詹Cos", "許哲維", "阿任", "XuezheWu 學哲", "貓貓貓", 
+            "棕櫚樹LV1", "毛怪Mao(*'へ'*)", "Alex 吳維", "HSU", "🌹Lucas竣🌹", 
+            "阿布", "💪輝仔🐒🐵", "浩浩🐱", "CKB", "event (凱凱)", "馬健綸", 
+            "逸倫", "柏丞 (39計程車)", "端峻", "🐻🐯 熊虎（大熊）Eric🐻🐯", 
+            "🌹俊曉", "🌹𝓜𝓢林罐罐1.0", "克寶J大寶", "Jordy", "Scott Huang", 
+            "Foodpanda外送員-小雞", "𝓜𝓢阿尼尼", "Naker", "VW boyuan", 
+            "小馬", "XH𝓜𝓟🌹", "阿東", "JimYu", "👍宇哲/Adolph/阿麥❤️", "小金阿傑"
+        ]
+    };
+
+    function filterList() {
+        const userRole = document.getElementById('roleSelect').value;
+        const myBody = document.getElementById('myBody').value;
+        const prefBody = document.getElementById('prefBody').value;
+        const resultListEl = document.getElementById('resultList');
+
+        resultListEl.innerHTML = ""; // 清空結果
+
+        // 1. 根據角色規則，取得初步「角色候選名單」
+        // 規則：
+        // 一號 -> 列出 不分、0號
+        // 0號 -> 列出 不分、一號
+        // 不分 -> 列出 一號、0號
+        // Side -> 列出 Side
+        // 69 -> 列出 69
+        
+        let roleCandidates = [];
+        if (userRole === "1") {
+            roleCandidates = [...roleData["不分"], ...roleData["0號"]];
+        } else if (userRole === "0") {
+            roleCandidates = [...roleData["不分"], ...roleData["1號"]];
+        } else if (userRole === "0.5") { // 不分
+            roleCandidates = [...roleData["1號"], ...roleData["0號"]];
+        } else if (userRole === "Side") {
+            roleCandidates = [...roleData["Side"]];
+        } else if (userRole === "69") {
+            roleCandidates = [...roleData["純69"]];
+        }
+
+        // 2. 根據體型規則，取得初步「體型候選名單」
+        let typeCandidates = [];
+
+        if (myBody === "熊" && prefBody === "熊") {
+            typeCandidates = [...typeData["熊喜熊"]];
+        } else if (myBody === "熊" && prefBody === "猴") {
+            typeCandidates = [...typeData["熊喜猴"]];
+        } else if (myBody === "猴" && prefBody === "熊") {
+            typeCandidates = [...typeData["猴喜熊"]];
+        } else if (myBody === "猴" && prefBody === "猴") {
+            typeCandidates = [...typeData["猴喜猴"]];
+        } else if (myBody === "猴" && prefBody === "都可") {
+            typeCandidates = [...typeData["猴喜猴"], ...typeData["熊猴都可"]];
+        } else if (myBody === "熊" && prefBody === "都可") {
+            typeCandidates = [...typeData["熊喜熊"], ...typeData["熊猴都可"]];
+        }
+
+        // 3. 交叉比對 (Intersection)
+        // 正規化字串: 去除所有空白，轉小寫
+        const normalize = (str) => str.replace(/\s+/g, '').toLowerCase();
+        
+        // 建立體型候選人的 Set
+        const typeSet = new Set(typeCandidates.map(name => normalize(name)));
+
+        // 篩選出同時在「角色候選名單」與「體型候選名單」的人
+        const finalResults = roleCandidates.filter(name => {
+            return typeSet.has(normalize(name));
+        });
+
+        // 去除重複 (以防名字在候選清單中出現兩次)
+        const uniqueResults = [...new Set(finalResults)];
+
+        // 4. 顯示結果
+        if (uniqueResults.length > 0) {
+            uniqueResults.forEach(name => {
+                const li = document.createElement('li');
+                li.textContent = name;
+                resultListEl.appendChild(li);
+            });
+        } else {
+            resultListEl.innerHTML = '<li class="no-result">沒有找到符合條件的對象 🙅‍♂️</li>';
+        }
+    }
+</script>
+
+</body>
+</html>
