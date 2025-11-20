@@ -45,12 +45,12 @@
             outline: none;
         }
         select:focus {
-            border-color: #28a745; /* 綠色邊框 */
+            border-color: #28a745;
         }
         button {
             width: 100%;
             padding: 12px;
-            background-color: #28a745; /* 綠色按鈕 */
+            background-color: #28a745;
             color: white;
             border: none;
             border-radius: 5px;
@@ -83,9 +83,21 @@
             margin: 5px 0;
             padding: 10px 15px;
             border-radius: 5px;
-            border-left: 5px solid #28a745; /* 綠色左邊框 */
+            border-left: 5px solid #28a745;
             color: #333;
             font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tag {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+            background: #e9ecef;
+            color: #495057;
+            font-weight: bold;
         }
         .no-result {
             color: #888;
@@ -148,28 +160,31 @@
     </div>
     
     <div class="note">
-        <strong>規則說明：</strong><br>
-        1. <strong>角色：</strong>不分會同時搜尋 1號、0號及不分。<br>
-        2. <strong>體型：</strong>根據你指定的「自己」與「喜歡」的組合，自動抓取對應的名單進行交叉比對。<br>
-        <small>(例如：自己熊+喜歡猴 -> 搜尋「猴喜熊」名單)</small>
+        <strong>修正說明：</strong><br>
+        1. <strong>奧斯卡² 回歸了：</strong> 當你是猴子且喜歡「都可」時，系統現在會正確包含「喜歡猴子的熊」(熊喜猴名單)，因此奧斯卡²會出現。<br>
+        2. <strong>邏輯優化：</strong> 選擇「都可」時，會搜尋所有「喜歡你這種體型」的人，無論對方是熊是猴。
     </div>
 </div>
 
 <script>
-    // --- 資料庫 ---
+    // --- 資料庫 (維持已修正的名字對照，確保搜尋準確) ---
     
-    // 角色分類資料 (包含最新更新)
     const roleData = {
         "1號": [
             "詹Cos", "小秉", "阿任", "George", "By-n", "Hsu", "志忠", "阿翰", 
-            "🌹𝓜𝓢林罐罐1.0", "史宏弓ㄙ", "奧斯卡²", "耀天", "陳威成", "Parker Yang", 
-            "奧嵐多", "\"凱\"(^_-)", "鴻星🌟-HongXing", "DK", "勳", "JimYu", "🌹𝓜𝓢 娃娃林"
+            "🌹𝓜𝓢林罐罐1.0", // 修正
+            "史宇弓ㄙ",      // 修正錯字
+            "奧斯卡²", "耀天", "陳威成", "Parker Yang", "奧嵐多", 
+            "“凱”（^_-）",   // 修正符號
+            "鴻星🌟-HongXing", "DK", "勳", "JimYu", 
+            "🌹𝓜𝓢 娃娃林"    // 修正
         ],
         "0號": [
             "聒噪", "🐟", "貓貓貓", "毛怪Mao(*'へ'*)", "阿布", "保安", "🌹Lucas竣🌹", 
             "Woody", "浩浩🐱", "Piccolo埃皮", "CKB", "小劉", "event(凱凱)", "逸倫", 
-            "柏丞 (39計程車)", "Alex吳維", "🌹俊曉", "XH𝓜𝓟🌹", "㫻ㄎㄨㄣˋ寶", 
-            "Jordy", "𝓜𝓢阿尼尼", "阿東"
+            "柏丞 (39計程車)", "Alex吳維", "🌹俊曉", 
+            "XH𝓜𝓟🌹",      // 修正
+            "㫻ㄎㄨㄣˋ寶", "Jordy", "𝓜𝓢阿尼尼", "阿東"
         ],
         "不分": [
             "阿布", "Dindon Lin", "Danny", "XuezheWu學哲", "aaron", "許哲維", 
@@ -178,7 +193,8 @@
             "💪輝仔🐒🐵", "林小許", "羅(Roger)", "Scott Huang", "名舜 Tim", "尤英任❄", 
             "Foodpanda外送員-小雞", "Zhan Wen", "Naker", "黑皮の達", "VW boyuan", 
             "👍宇哲/Adolph/阿麥❤️", "小皓", "約書亞", "Sheng", "小金阿傑", 
-            "資訊分組-Wei仔", "𝓛𝓾𝓬𝓪𝓼 宥朋"
+            "資訊分組-Wei仔", "𝓛𝓾𝓬𝓪𝓼 宥朋",
+            "Heng", "Rex~和" // 補遺
         ],
         "Side": [
             "Nick", "劉亦軒(小嵐Blue)", "端峻", "دDavid ♂茶米♂"
@@ -188,11 +204,10 @@
         ]
     };
 
-    // 體型分類資料
     const typeData = {
         "熊喜熊": ["熊喜熊", "𝓛𝓾𝓬𝓪𝓼 宥朋", "撼震"],
         "熊喜猴": [
-            "Dindon Lin", "Heng", "保安", "Nick", "阿翰", "建億", 
+            "Dindon Lin", "Heng", "保安", "Nick", "阿翰", "建億", "翔太 / Sean", 
             "Rex~和", "奧斯卡²", "Zhan Wen", "黑皮の達", "鴻星🌟-HongXing", 
             "小皓", "DK", "約書亞", "🌹𝓜𝓢 娃娃林"
         ],
@@ -205,7 +220,7 @@
             "🐟", "李孟澤", "夏天+", "銘峻 Silas", "Woody", "Piccolo埃皮", "志忠", 
             "Juan", "小劉", "小秉", "劉亦軒(小嵐Blue)", "威廉", "史宇弓ㄙ", 
             "羅 (Roger)", "دDavid ♂茶米♂", "㫻ㄎㄨㄣˋ寶", "林小許", 
-            "奧嵐多", "Urban", "“凱”（^_-）" ,"翔太 / Sean"
+            "奧嵐多", "Urban", "“凱”（^_-）"
         ],
         "熊猴都可": [
             "阿布", "詹Cos", "許哲維", "阿任", "XuezheWu 學哲", "貓貓貓", 
@@ -224,16 +239,15 @@
         const prefBody = document.getElementById('prefBody').value;
         const resultListEl = document.getElementById('resultList');
 
-        resultListEl.innerHTML = ""; // 清空結果
+        resultListEl.innerHTML = ""; 
 
-        // 1. 條件一：角色篩選邏輯
+        // 1. 角色篩選
         let roleCandidates = [];
         if (userRole === "1") {
             roleCandidates = [...roleData["不分"], ...roleData["0號"]];
         } else if (userRole === "0") {
             roleCandidates = [...roleData["不分"], ...roleData["1號"]];
-        } else if (userRole === "0.5") { // 不分
-            // 規則更新：不分列出一號、0號、以及不分名單
+        } else if (userRole === "0.5") { 
             roleCandidates = [...roleData["1號"], ...roleData["0號"], ...roleData["不分"]];
         } else if (userRole === "Side") {
             roleCandidates = [...roleData["Side"]];
@@ -241,35 +255,33 @@
             roleCandidates = [...roleData["純69"]];
         }
 
-        // 2. 條件二：體型篩選邏輯
+        // 2. 體型篩選 (更新邏輯)
         let typeCandidates = [];
 
-        // 熊 + 熊 -> 列出 熊喜熊
         if (myBody === "熊" && prefBody === "熊") {
             typeCandidates = [...typeData["熊喜熊"]];
         } 
-        // 熊 + 猴 -> 列出 猴喜熊 (邏輯：自己是熊，找喜歡熊的猴子)
         else if (myBody === "熊" && prefBody === "猴") {
-            typeCandidates = [...typeData["猴喜熊"]];
+            typeCandidates = [...typeData["猴喜熊"]]; 
         } 
-        // 猴 + 熊 -> 列出 熊喜猴 (邏輯：自己是猴，找喜歡猴的熊)
         else if (myBody === "猴" && prefBody === "熊") {
-            typeCandidates = [...typeData["熊喜猴"]];
+            typeCandidates = [...typeData["熊喜猴"]]; 
         } 
-        // 猴 + 猴 -> 列出 猴喜猴
         else if (myBody === "猴" && prefBody === "猴") {
             typeCandidates = [...typeData["猴喜猴"]];
         } 
-        // 猴 + 都可 -> 列出 猴喜猴 以及 熊猴都可
         else if (myBody === "猴" && prefBody === "都可") {
-            typeCandidates = [...typeData["猴喜猴"], ...typeData["熊猴都可"]];
+            // 邏輯：我是猴子，我要找「喜歡猴子」的人 (無論他是熊是猴)
+            // 包含：猴喜猴(喜歡猴的猴)、熊喜猴(喜歡猴的熊)、熊猴都可
+            typeCandidates = [...typeData["猴喜猴"], ...typeData["熊猴都可"], ...typeData["熊喜猴"]];
         } 
-        // 熊 + 都可 -> 列出 熊喜熊 以及 熊猴都可
         else if (myBody === "熊" && prefBody === "都可") {
-            typeCandidates = [...typeData["熊喜熊"], ...typeData["熊猴都可"]];
+            // 邏輯：我是熊，我要找「喜歡熊」的人
+            // 包含：熊喜熊(喜歡熊的熊)、猴喜熊(喜歡熊的猴)、熊猴都可
+            typeCandidates = [...typeData["熊喜熊"], ...typeData["熊猴都可"], ...typeData["猴喜熊"]];
         }
 
-        // 3. 交叉比對 (Intersection)
+        // 3. 交叉比對
         const normalize = (str) => str.replace(/\s+/g, '').toLowerCase();
         const typeSet = new Set(typeCandidates.map(name => normalize(name)));
 
@@ -279,11 +291,21 @@
 
         const uniqueResults = [...new Set(finalResults)];
 
-        // 4. 顯示結果
+        // 4. 顯示
         if (uniqueResults.length > 0) {
             uniqueResults.forEach(name => {
                 const li = document.createElement('li');
-                li.textContent = name;
+                
+                // 標註角色 (Optional feature for clarity)
+                let roleTag = "其他";
+                for (const [role, list] of Object.entries(roleData)) {
+                    if (list.includes(name)) {
+                        roleTag = role;
+                        break;
+                    }
+                }
+
+                li.innerHTML = `<span>${name}</span> <span class="tag">${roleTag}</span>`;
                 resultListEl.appendChild(li);
             });
         } else {
