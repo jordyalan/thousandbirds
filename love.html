@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的理想ㄆ友名單 (修正與推薦版)</title>
+    <title>我的理想ㄆ友名單 (更新版)</title>
     <style>
         body {
             font-family: "Microsoft JhengHei", "Heiti TC", Arial, sans-serif;
@@ -211,9 +211,8 @@
     
     <div class="note">
         <strong>更新說明：</strong><br>
-        1. <strong>資料修正：</strong> "翔太 / Sean" 已從「熊喜猴」移至「猴喜熊」，修正了分類錯誤。<br>
-        2. <strong>統計資訊：</strong> 搜尋結果上方顯示符合人數，下方顯示目前有效資料庫總人數。<br>
-        3. <strong>特別推薦：</strong> 系統會從結果中隨機挑選一位推薦給您！
+        1. <strong>資料修正：</strong> "翔太 / Sean" 已移動至「猴喜猴」分類。<br>
+        2. <strong>功能維持：</strong> 包含人數統計與真命天子推薦功能。
     </div>
 </div>
 
@@ -237,7 +236,7 @@
             "阿布", "Dindon Lin", "Danny", "XuezheWu學哲", "aaron", "許哲維", 
             "山姆🐳", "YusiangHong", "夏天+", "銘峻 Silas", "🍃", "Juan", "建億", 
             "馬健綸", "撼震", "棕櫚樹LV1", "威廉", "Francis  🐢❤️🐻🐷", 
-            "翔太 / Sean", // 角色維持不變
+            "翔太 / Sean", 
             "💪輝仔🐒🐵", "林小許", "羅(Roger)", "Scott Huang", "名舜 Tim", "尤英任❄", 
             "Foodpanda外送員-小雞", "Zhan Wen", "Naker", "黑皮の達", "VW boyuan", 
             "👍宇哲/Adolph/阿麥❤️", "小皓", "約書亞", "Sheng", "小金阿傑", 
@@ -252,30 +251,31 @@
         ]
     };
 
-    // ★ 修正後的體型資料 ★
+    // ★ 更新後的體型資料 ★
     const typeData = {
         "熊喜熊": ["熊喜熊", "𝓛𝓾𝓬𝓪𝓼 宥朋", "撼震"],
         
-        // 移除了 "翔太 / Sean"
         "熊喜猴": [
             "Dindon Lin", "Heng", "保安", "Nick", "阿翰", "建億", 
             "Rex~和", "奧斯卡²", "Zhan Wen", "黑皮の達", "鴻星🌟-HongXing", 
             "小皓", "DK", "約書亞", "🌹𝓜𝓢 娃娃林"
         ],
         
-        // 增加了 "翔太 / Sean" (將其視為喜歡熊的猴)
         "猴喜熊": [
             "山姆🐳", "🍃", "陳威成", "耀天", "Francis  🐢❤️🐻🐷", "尤英任❄", 
-            "名舜 Tim", "Parker Yang", "資訊分組-Wei仔", "勳", "翔太 / Sean"
+            "名舜 Tim", "Parker Yang", "資訊分組-Wei仔", "勳"
         ],
         
+        // 將 "翔太 / Sean" 加入此處
         "猴喜猴": [
             "George", "Danny", "aaron", "Weiting", "聒噪", "YusiangHong", "By-n", 
             "🐟", "李孟澤", "夏天+", "銘峻 Silas", "Woody", "Piccolo埃皮", "志忠", 
             "Juan", "小劉", "小秉", "劉亦軒(小嵐Blue)", "威廉", "史宇弓ㄙ", 
             "羅 (Roger)", "دDavid ♂茶米♂", "㫻ㄎㄨㄣˋ寶", "林小許", 
-            "奧嵐多", "Urban", "“凱”（^_-）"
+            "奧嵐多", "Urban", "“凱”（^_-）",
+            "翔太 / Sean" 
         ],
+        
         "熊猴都可": [
             "阿布", "詹Cos", "許哲維", "阿任", "XuezheWu 學哲", "貓貓貓", 
             "棕櫚樹LV1", "毛怪Mao(*'へ'*)", "Alex 吳維", "HSU", "🌹Lucas竣🌹", 
@@ -303,7 +303,7 @@
             list.forEach(name => allTypePeople.add(normalize(name)));
         });
 
-        // 3. 取交集 (同時有角色設定也有體型設定的人，才是有效名單)
+        // 3. 取交集
         let validCount = 0;
         allRolePeople.forEach(name => {
             if (allTypePeople.has(name)) {
@@ -377,7 +377,6 @@
         const uniqueResults = [...new Set(finalResults)];
 
         // 4. 顯示結果
-        // 4.1 顯示符合人數
         if (uniqueResults.length > 0) {
             matchCountHeader.innerHTML = `🎉 找到符合條件的有：${uniqueResults.length} 位`;
 
@@ -394,7 +393,7 @@
                 resultListEl.appendChild(li);
             });
 
-            // 4.3 真命天子推薦 (隨機選一位)
+            // 推薦功能
             const randomIndex = Math.floor(Math.random() * uniqueResults.length);
             const luckyOne = uniqueResults[randomIndex];
             luckyOneName.textContent = luckyOne;
@@ -405,7 +404,7 @@
             resultListEl.innerHTML = '<li class="no-result">沒有找到符合條件的對象 🙅‍♂️</li>';
         }
 
-        // 4.2 顯示總有效人數 (名單列出後顯示)
+        // 統計
         const totalValidCount = getValidDatabaseCount();
         totalDbFooter.innerHTML = `📊 目前資料庫有效總人數：${totalValidCount} 位`;
     }
