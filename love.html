@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的理想ㄆ友名單</title>
+    <title>我的理想ㄆ友名單 (修正與推薦版)</title>
     <style>
         body {
             font-family: "Microsoft JhengHei", "Heiti TC", Arial, sans-serif;
@@ -63,20 +63,28 @@
         button:hover {
             background-color: #218838;
         }
-        #result-area {
+        
+        /* 統計資訊區域 */
+        .stats-header {
             margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        .result-header {
             font-size: 1.1em;
-            margin-bottom: 10px;
-            color: #333;
+            color: #28a745;
             font-weight: bold;
+            text-align: center;
         }
+        .stats-footer {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #888;
+            text-align: right;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
         .result-list {
             list-style: none;
             padding: 0;
+            margin-top: 10px;
         }
         .result-list li {
             background: #f8f9fa;
@@ -108,6 +116,35 @@
             border: 1px dashed #ccc;
             border-radius: 5px;
         }
+
+        /* 真命天子推薦區塊 */
+        .recommendation-box {
+            margin-top: 25px;
+            background: linear-gradient(135deg, #fff0f0 0%, #ffe6e6 100%);
+            border: 2px solid #ffc1c1;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            display: none; /* 預設隱藏 */
+            animation: popIn 0.5s ease-out;
+        }
+        .recommendation-title {
+            color: #e83e8c;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .recommendation-name {
+            font-size: 1.5em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
         .note {
             font-size: 13px;
             color: #666;
@@ -154,47 +191,58 @@
 
     <button onclick="filterList()">🔍 開始篩選</button>
 
+    <!-- 結果顯示區域 -->
     <div id="result-area">
-        <div class="result-header">篩選結果：</div>
+        <!-- 1. 顯示符合數量 -->
+        <div id="matchCountHeader" class="stats-header"></div>
+        
+        <!-- 列表 -->
         <ul id="resultList" class="result-list"></ul>
+        
+        <!-- 2. 顯示總資料庫人數 -->
+        <div id="totalDbFooter" class="stats-footer"></div>
+    </div>
+
+    <!-- 3. 真命天子推薦 -->
+    <div id="recommendationBox" class="recommendation-box">
+        <div class="recommendation-title">💘 他可能是你的真命天子</div>
+        <div id="luckyOneName" class="recommendation-name"></div>
     </div>
     
     <div class="note">
-        <strong>修正說明：</strong><br>
-        1. <strong>奧斯卡² 回歸了：</strong> 當你是猴子且喜歡「都可」時，系統現在會正確包含「喜歡猴子的熊」(熊喜猴名單)，因此奧斯卡²會出現。<br>
-        2. <strong>邏輯優化：</strong> 選擇「都可」時，會搜尋所有「喜歡你這種體型」的人，無論對方是熊是猴。
+        <strong>更新說明：</strong><br>
+        1. <strong>資料修正：</strong> "翔太 / Sean" 已從「熊喜猴」移至「猴喜熊」，修正了分類錯誤。<br>
+        2. <strong>統計資訊：</strong> 搜尋結果上方顯示符合人數，下方顯示目前有效資料庫總人數。<br>
+        3. <strong>特別推薦：</strong> 系統會從結果中隨機挑選一位推薦給您！
     </div>
 </div>
 
 <script>
-    // --- 資料庫 (維持已修正的名字對照，確保搜尋準確) ---
+    // --- 資料庫 ---
     
     const roleData = {
         "1號": [
             "詹Cos", "小秉", "阿任", "George", "By-n", "Hsu", "志忠", "阿翰", 
-            "🌹𝓜𝓢林罐罐1.0", // 修正
-            "史宇弓ㄙ",      // 修正錯字
-            "奧斯卡²", "耀天", "陳威成", "Parker Yang", "奧嵐多", 
-            "“凱”（^_-）",   // 修正符號
-            "鴻星🌟-HongXing", "DK", "勳", "JimYu", 
-            "🌹𝓜𝓢 娃娃林"    // 修正
+            "🌹𝓜𝓢林罐罐1.0", "史宇弓ㄙ", "奧斯卡²", "耀天", "陳威成", "Parker Yang", 
+            "奧嵐多", "“凱”（^_-）", "鴻星🌟-HongXing", "DK", "勳", "JimYu", 
+            "🌹𝓜𝓢 娃娃林"
         ],
         "0號": [
             "聒噪", "🐟", "貓貓貓", "毛怪Mao(*'へ'*)", "阿布", "保安", "🌹Lucas竣🌹", 
             "Woody", "浩浩🐱", "Piccolo埃皮", "CKB", "小劉", "event(凱凱)", "逸倫", 
-            "柏丞 (39計程車)", "Alex吳維", "🌹俊曉", 
-            "XH𝓜𝓟🌹",      // 修正
-            "㫻ㄎㄨㄣˋ寶", "Jordy", "𝓜𝓢阿尼尼", "阿東"
+            "柏丞 (39計程車)", "Alex吳維", "🌹俊曉", "XH𝓜𝓟🌹", "㫻ㄎㄨㄣˋ寶", 
+            "Jordy", "𝓜𝓢阿尼尼", "阿東"
         ],
         "不分": [
             "阿布", "Dindon Lin", "Danny", "XuezheWu學哲", "aaron", "許哲維", 
             "山姆🐳", "YusiangHong", "夏天+", "銘峻 Silas", "🍃", "Juan", "建億", 
-            "馬健綸", "撼震", "棕櫚樹LV1", "威廉", "Francis  🐢❤️🐻🐷", "翔太 / Sean", 
+            "馬健綸", "撼震", "棕櫚樹LV1", "威廉", "Francis  🐢❤️🐻🐷", 
+            "翔太 / Sean", // 角色維持不變
             "💪輝仔🐒🐵", "林小許", "羅(Roger)", "Scott Huang", "名舜 Tim", "尤英任❄", 
             "Foodpanda外送員-小雞", "Zhan Wen", "Naker", "黑皮の達", "VW boyuan", 
             "👍宇哲/Adolph/阿麥❤️", "小皓", "約書亞", "Sheng", "小金阿傑", 
             "資訊分組-Wei仔", "𝓛𝓾𝓬𝓪𝓼 宥朋",
-            "Heng", "Rex~和" // 補遺
+            "Heng", "Rex~和"
         ],
         "Side": [
             "Nick", "劉亦軒(小嵐Blue)", "端峻", "دDavid ♂茶米♂"
@@ -204,17 +252,23 @@
         ]
     };
 
+    // ★ 修正後的體型資料 ★
     const typeData = {
         "熊喜熊": ["熊喜熊", "𝓛𝓾𝓬𝓪𝓼 宥朋", "撼震"],
+        
+        // 移除了 "翔太 / Sean"
         "熊喜猴": [
-            "Dindon Lin", "Heng", "保安", "Nick", "阿翰", "建億", "翔太 / Sean", 
+            "Dindon Lin", "Heng", "保安", "Nick", "阿翰", "建億", 
             "Rex~和", "奧斯卡²", "Zhan Wen", "黑皮の達", "鴻星🌟-HongXing", 
             "小皓", "DK", "約書亞", "🌹𝓜𝓢 娃娃林"
         ],
+        
+        // 增加了 "翔太 / Sean" (將其視為喜歡熊的猴)
         "猴喜熊": [
             "山姆🐳", "🍃", "陳威成", "耀天", "Francis  🐢❤️🐻🐷", "尤英任❄", 
-            "名舜 Tim", "Parker Yang", "資訊分組-Wei仔", "勳"
+            "名舜 Tim", "Parker Yang", "資訊分組-Wei仔", "勳", "翔太 / Sean"
         ],
+        
         "猴喜猴": [
             "George", "Danny", "aaron", "Weiting", "聒噪", "YusiangHong", "By-n", 
             "🐟", "李孟澤", "夏天+", "銘峻 Silas", "Woody", "Piccolo埃皮", "志忠", 
@@ -233,13 +287,48 @@
         ]
     };
 
+    // 計算有效資料庫人數的功能
+    function getValidDatabaseCount() {
+        const normalize = (str) => str.replace(/\s+/g, '').toLowerCase();
+
+        // 1. 取得所有角色名單中的不重複人名
+        let allRolePeople = new Set();
+        Object.values(roleData).forEach(list => {
+            list.forEach(name => allRolePeople.add(normalize(name)));
+        });
+
+        // 2. 取得所有體型名單中的不重複人名
+        let allTypePeople = new Set();
+        Object.values(typeData).forEach(list => {
+            list.forEach(name => allTypePeople.add(normalize(name)));
+        });
+
+        // 3. 取交集 (同時有角色設定也有體型設定的人，才是有效名單)
+        let validCount = 0;
+        allRolePeople.forEach(name => {
+            if (allTypePeople.has(name)) {
+                validCount++;
+            }
+        });
+
+        return validCount;
+    }
+
     function filterList() {
         const userRole = document.getElementById('roleSelect').value;
         const myBody = document.getElementById('myBody').value;
         const prefBody = document.getElementById('prefBody').value;
+        
         const resultListEl = document.getElementById('resultList');
+        const matchCountHeader = document.getElementById('matchCountHeader');
+        const totalDbFooter = document.getElementById('totalDbFooter');
+        const recommendationBox = document.getElementById('recommendationBox');
+        const luckyOneName = document.getElementById('luckyOneName');
 
         resultListEl.innerHTML = ""; 
+        matchCountHeader.innerHTML = "";
+        totalDbFooter.innerHTML = "";
+        recommendationBox.style.display = "none";
 
         // 1. 角色篩選
         let roleCandidates = [];
@@ -255,7 +344,7 @@
             roleCandidates = [...roleData["純69"]];
         }
 
-        // 2. 體型篩選 (更新邏輯)
+        // 2. 體型篩選
         let typeCandidates = [];
 
         if (myBody === "熊" && prefBody === "熊") {
@@ -271,13 +360,9 @@
             typeCandidates = [...typeData["猴喜猴"]];
         } 
         else if (myBody === "猴" && prefBody === "都可") {
-            // 邏輯：我是猴子，我要找「喜歡猴子」的人 (無論他是熊是猴)
-            // 包含：猴喜猴(喜歡猴的猴)、熊喜猴(喜歡猴的熊)、熊猴都可
             typeCandidates = [...typeData["猴喜猴"], ...typeData["熊猴都可"], ...typeData["熊喜猴"]];
         } 
         else if (myBody === "熊" && prefBody === "都可") {
-            // 邏輯：我是熊，我要找「喜歡熊」的人
-            // 包含：熊喜熊(喜歡熊的熊)、猴喜熊(喜歡熊的猴)、熊猴都可
             typeCandidates = [...typeData["熊喜熊"], ...typeData["熊猴都可"], ...typeData["猴喜熊"]];
         }
 
@@ -291,12 +376,13 @@
 
         const uniqueResults = [...new Set(finalResults)];
 
-        // 4. 顯示
+        // 4. 顯示結果
+        // 4.1 顯示符合人數
         if (uniqueResults.length > 0) {
+            matchCountHeader.innerHTML = `🎉 找到符合條件的有：${uniqueResults.length} 位`;
+
             uniqueResults.forEach(name => {
                 const li = document.createElement('li');
-                
-                // 標註角色 (Optional feature for clarity)
                 let roleTag = "其他";
                 for (const [role, list] of Object.entries(roleData)) {
                     if (list.includes(name)) {
@@ -304,13 +390,24 @@
                         break;
                     }
                 }
-
                 li.innerHTML = `<span>${name}</span> <span class="tag">${roleTag}</span>`;
                 resultListEl.appendChild(li);
             });
+
+            // 4.3 真命天子推薦 (隨機選一位)
+            const randomIndex = Math.floor(Math.random() * uniqueResults.length);
+            const luckyOne = uniqueResults[randomIndex];
+            luckyOneName.textContent = luckyOne;
+            recommendationBox.style.display = "block";
+
         } else {
+            matchCountHeader.innerHTML = `😢 找到符合條件的有：0 位`;
             resultListEl.innerHTML = '<li class="no-result">沒有找到符合條件的對象 🙅‍♂️</li>';
         }
+
+        // 4.2 顯示總有效人數 (名單列出後顯示)
+        const totalValidCount = getValidDatabaseCount();
+        totalDbFooter.innerHTML = `📊 目前資料庫有效總人數：${totalValidCount} 位`;
     }
 </script>
 
