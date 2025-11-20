@@ -110,52 +110,52 @@
 <body>
 
 <div class="container">
-    <h2>🌈 我的理想ㄆ友名單💦</h2>
+    <h2>🌈 我的理想ㄆ友名單 💦</h2>
 
     <div class="form-group">
         <label for="roleSelect">1. 我的角色 (尋找對象)</label>
         <select id="roleSelect">
-            <option value="1">1號 (列出 0號、不分)</option>
-            <option value="0">0號 (列出 1號、不分)</option>
-            <option value="0.5">不分 (列出 1號、0號)</option>
-            <option value="Side">Side (列出 Side)</option>
-            <option value="69">純69 (列出 純69)</option>
+            <option value="1">🍆1號 (列出 0號、不分)</option>
+            <option value="0">🫶0號 (列出 1號、不分)</option>
+            <option value="0.5">🕺不分 (列出 1號、0號、不分)</option>
+            <option value="Side">👋Side (列出 Side)</option>
+            <option value="69">💋純69 (列出 純69)</option>
         </select>
     </div>
 
     <div class="form-group">
         <label for="myBody">2. 我的體型</label>
         <select id="myBody">
-            <option value="熊">熊</option>
-            <option value="猴">猴</option>
+            <option value="熊">熊🐻</option>
+            <option value="猴">猴🐒</option>
         </select>
     </div>
 
     <div class="form-group">
-        <label for="prefBody">3. 喜歡的體型</label>
+        <label for="prefBody">3. 喜歡的體型❤️</label>
         <select id="prefBody">
-            <option value="熊">熊</option>
-            <option value="猴">猴</option>
-            <option value="都可">都可</option>
+            <option value="熊">熊🐻</option>
+            <option value="猴">猴🐒</option>
+            <option value="都可">🐻🐒都可</option>
         </select>
     </div>
 
     <button onclick="filterList()">🔍 開始篩選</button>
 
     <div id="result-area">
-        <div class="result-header">以下是您感興趣的人：</div>
+        <div class="result-header">篩選結果：</div>
         <ul id="resultList" class="result-list"></ul>
     </div>
     
     <div class="note">
         <strong>使用說明：</strong><br>
-        系統會將「名字」進行比對。如果在角色名單和體型名單中，名字的寫法（包含特殊符號、表情）不完全一致，可能會導致無法顯示。<br>
-        <small>例如："MF娃娃林" 與 "🌹𝓜𝓢 娃娃林" 會被視為不同人。</small>
+        系統會將「名字」進行比對。如果角色名單和體型名單中，名字的寫法（包含特殊符號）不完全一致，可能會導致無法顯示。
+        <br><strong>注意：</strong>現在選擇「不分」時，會同時搜尋「1號、0號、不分」名單。
     </div>
 </div>
 
 <script>
-    // --- 更新後的資料庫 (來自你的新檔案) ---
+    // --- 資料庫 ---
     
     // 角色分類資料 (更新版)
     const roleData = {
@@ -187,7 +187,7 @@
         ]
     };
 
-    // 體型分類資料 (維持原樣，根據第一個檔案)
+    // 體型分類資料
     const typeData = {
         "熊喜熊": ["熊喜熊", "𝓛𝓾𝓬𝓪𝓼 宥朋", "撼震"],
         "熊喜猴": [
@@ -226,20 +226,17 @@
         resultListEl.innerHTML = ""; // 清空結果
 
         // 1. 根據角色規則，取得初步「角色候選名單」
-        // 規則：
-        // 一號 -> 列出 不分、0號
-        // 0號 -> 列出 不分、一號
-        // 不分 -> 列出 一號、0號
-        // Side -> 列出 Side
-        // 69 -> 列出 69
-        
         let roleCandidates = [];
+        
         if (userRole === "1") {
+            // 一號 -> 列出 不分、0號
             roleCandidates = [...roleData["不分"], ...roleData["0號"]];
         } else if (userRole === "0") {
+            // 0號 -> 列出 不分、一號
             roleCandidates = [...roleData["不分"], ...roleData["1號"]];
-        } else if (userRole === "0.5") { // 不分
-            roleCandidates = [...roleData["1號"], ...roleData["0號"]];
+        } else if (userRole === "0.5") { 
+            // 不分 -> 列出 一號、0號、以及不分 (這是新規則)
+            roleCandidates = [...roleData["1號"], ...roleData["0號"], ...roleData["不分"]];
         } else if (userRole === "Side") {
             roleCandidates = [...roleData["Side"]];
         } else if (userRole === "69") {
@@ -264,18 +261,15 @@
         }
 
         // 3. 交叉比對 (Intersection)
-        // 正規化字串: 去除所有空白，轉小寫
         const normalize = (str) => str.replace(/\s+/g, '').toLowerCase();
-        
-        // 建立體型候選人的 Set
         const typeSet = new Set(typeCandidates.map(name => normalize(name)));
 
-        // 篩選出同時在「角色候選名單」與「體型候選名單」的人
+        // 篩選
         const finalResults = roleCandidates.filter(name => {
             return typeSet.has(normalize(name));
         });
 
-        // 去除重複 (以防名字在候選清單中出現兩次)
+        // 去除重複
         const uniqueResults = [...new Set(finalResults)];
 
         // 4. 顯示結果
