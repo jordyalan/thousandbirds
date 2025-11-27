@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的理想ㄆ友名單 (更新版)</title>
+    <title>我的理想ㄆ友名單 (最新更新版)</title>
     <style>
         body {
             font-family: "Microsoft JhengHei", "Heiti TC", Arial, sans-serif;
@@ -211,79 +211,77 @@
     
     <div class="note">
         <strong>更新說明：</strong><br>
-        1. <strong>資料修正：</strong> "翔太 / Sean" 已移動至「猴喜猴」分類。<br>
-        2. <strong>功能維持：</strong> 包含人數統計與真命天子推薦功能。
+        已依照最新的「角色分類」與「體型分類」名單更新資料庫。<br>
+        包含最新收錄的成員與更正後的分類。
     </div>
 </div>
 
 <script>
-    // --- 資料庫 ---
+    // --- 資料庫 (已更新) ---
     
     const roleData = {
         "1號": [
-            "詹Cos", "小秉", "阿任", "George", "By-n", "Hsu", "志忠", "阿翰", 
-            "🌹𝓜𝓢林罐罐1.0", "史宇弓ㄙ", "奧斯卡²", "耀天", "陳威成", "Parker Yang", 
-            "奧嵐多", "“凱”（^_-）", "鴻星🌟-HongXing", "DK", "勳", "JimYu", 
-            "🌹𝓜𝓢 娃娃林"
+            "小金阿傑", "詹Cos", "小秉", "阿任", "George1", "By-n", "志忠", "阿翰", 
+            "🌹𝓜𝓢林罐罐1.0", "史宏弓ㄙ", "奧斯卡²", "耀天", "陳威成", "Parker Yang", 
+            "奧嵐多", "\"凱\"(^_-)", "鴻星🌟-HongXing", "DK", "勳", "JimYu", 
+            "@🌹𝓜𝓢 娃娃林"
         ],
         "0號": [
-            "聒噪", "🐟", "貓貓貓", "毛怪Mao(*'へ'*)", "阿布", "保安", "🌹Lucas竣🌹", 
-            "Woody", "浩浩🐱", "Piccolo埃皮", "CKB", "小劉", "event(凱凱)", "逸倫", 
-            "柏丞 (39計程車)", "Alex吳維", "🌹俊曉", "XH𝓜𝓟🌹", "㫻ㄎㄨㄣˋ寶", 
-            "Jordy", "𝓜𝓢阿尼尼", "阿東"
+            "Eric（俊）", "Nick", "Eddy暐-起心動念", "聒噪", "🐟", "貓貓貓", 
+            "毛怪Mao(*'へ'*)", "阿布0", "保安", "🌹Lucas竣🌹", "浩浩🐱", "Piccolo埃皮", 
+            "CKB", "event(凱凱)", "逸倫", "柏丞 (39計程車)", "Alex吳維", "🌹俊曉", 
+            "XH𝓜𝓟🌹", "㫻ㄎㄨㄣˋ寶", "Jordy", "𝓜𝓢阿尼尼", "阿東"
         ],
         "不分": [
-            "阿布", "Dindon Lin", "Danny", "XuezheWu學哲", "aaron", "許哲維", 
-            "山姆🐳", "YusiangHong", "夏天+", "銘峻 Silas", "🍃", "Juan", "建億", 
-            "馬健綸", "撼震", "棕櫚樹LV1", "威廉", "Francis  🐢❤️🐻🐷", 
-            "翔太 / Sean", 
-            "💪輝仔🐒🐵", "林小許", "羅(Roger)", "Scott Huang", "名舜 Tim", "尤英任❄", 
-            "Foodpanda外送員-小雞", "Zhan Wen", "Naker", "黑皮の達", "VW boyuan", 
-            "👍宇哲/Adolph/阿麥❤️", "小皓", "約書亞", "Sheng", "小金阿傑", 
-            "資訊分組-Wei仔", "𝓛𝓾𝓬𝓪𝓼 宥朋",
-            "Heng", "Rex~和"
+            "♒️Jungle", "ting tsai", "Nick&린지우", "不分George", "Rex~和", "Urban", 
+            "不分阿布", "Dindon Lin", "Danny", "XuezheWu學哲", "aaron", "許哲維", 
+            "山姆🐳", "YusiangHong", "夏天+", "🍃", "Juan", "建億", "馬健綸", 
+            "撼震", "威廉", "Francis  🐢❤️🐻🐷", "翔太 / Sean", "💪輝仔🐒🐵", 
+            "林小許", "羅(Roger)", "Scott Huang", "名舜 Tim", "尤英任❄", "Zhan Wen", 
+            "Naker", "黑皮の達", "VW boyuan", "👍宇哲/Adolph/阿麥❤️", "小皓", 
+            "約書亞", "資訊分組-Wei仔", "𝓛𝓾𝓬𝓪𝓼 宥朋"
         ],
         "Side": [
-            "Nick", "劉亦軒(小嵐Blue)", "端峻", "دDavid ♂茶米♂"
+            "Weiting", "劉亦軒(小嵐Blue)", "端峻", "دDavid ♂茶米♂"
         ],
         "純69": [
-            "克寶J大寶", "小馬"
+            "克寶J大寶", "林恒旭"
         ]
     };
 
     // ★ 更新後的體型資料 ★
     const typeData = {
-        "熊喜熊": ["熊喜熊", "𝓛𝓾𝓬𝓪𝓼 宥朋", "撼震"],
+        "熊喜熊": [
+            "不分George", "𝓛𝓾𝓬𝓪𝓼 宥朋", "撼震"
+        ],
         
         "熊喜猴": [
-            "Dindon Lin", "Heng", "保安", "Nick", "阿翰", "建億", 
+            "詹Cos", "Dindon Lin", "Heng", "保安", "Nick", "阿翰", "建億", 
             "Rex~和", "奧斯卡²", "Zhan Wen", "黑皮の達", "鴻星🌟-HongXing", 
             "小皓", "DK", "約書亞", "🌹𝓜𝓢 娃娃林"
         ],
         
         "猴喜熊": [
-            "山姆🐳", "🍃", "陳威成", "耀天", "Francis  🐢❤️🐻🐷", "尤英任❄", 
-            "名舜 Tim", "Parker Yang", "資訊分組-Wei仔", "勳"
+            "林恒旭", "耀天", "山姆🐳", "🍃", "陳威成", "Francis  🐢❤️🐻🐷", 
+            "尤英任❄", "名舜 Tim", "Parker Yang", "資訊分組-Wei仔", "勳"
         ],
         
-        // 將 "翔太 / Sean" 加入此處
         "猴喜猴": [
-            "George", "Danny", "aaron", "Weiting", "聒噪", "YusiangHong", "By-n", 
-            "🐟", "李孟澤", "夏天+", "銘峻 Silas", "Woody", "Piccolo埃皮", "志忠", 
-            "Juan", "小劉", "小秉", "劉亦軒(小嵐Blue)", "威廉", "史宇弓ㄙ", 
-            "羅 (Roger)", "دDavid ♂茶米♂", "㫻ㄎㄨㄣˋ寶", "林小許", 
-            "奧嵐多", "Urban", "“凱”（^_-）",
-            "翔太 / Sean" 
+            "Eddy暐-起心動念", "翔太 / Sean", "George1", "Danny", "aaron", "Weiting", 
+            "聒噪", "YusiangHong", "By-n", "🐟", "李孟澤", "夏天+", "Piccolo埃皮", 
+            "志忠", "Juan", "小秉", "劉亦軒(小嵐Blue)", "威廉", "史宇弓ㄙ", 
+            "羅 (Roger)", "دDavid ♂茶米♂", "㫻ㄎㄨㄣˋ寶", "奧嵐多", "Urban", 
+            "“凱”（^_-）"
         ],
         
         "熊猴都可": [
-            "阿布", "詹Cos", "許哲維", "阿任", "XuezheWu 學哲", "貓貓貓", 
-            "棕櫚樹LV1", "毛怪Mao(*'へ'*)", "Alex 吳維", "HSU", "🌹Lucas竣🌹", 
-            "阿布", "💪輝仔🐒🐵", "浩浩🐱", "CKB", "event (凱凱)", "馬健綸", 
-            "逸倫", "柏丞 (39計程車)", "端峻", "🐻🐯 熊虎（大熊）Eric🐻🐯", 
-            "🌹俊曉", "🌹𝓜𝓢林罐罐1.0", "克寶J大寶", "Jordy", "Scott Huang", 
-            "Foodpanda外送員-小雞", "𝓜𝓢阿尼尼", "Naker", "VW boyuan", 
-            "小馬", "XH𝓜𝓟🌹", "阿東", "JimYu", "👍宇哲/Adolph/阿麥❤️", "小金阿傑"
+            "Eric（俊）", "ting tsai", "♒️Jungle", "Nick&린지우", "阿布0", "許哲維", 
+            "阿任", "XuezheWu 學哲", "貓貓貓", "毛怪Mao(*'へ'*)", "Alex 吳維", 
+            "🌹Lucas竣🌹", "不分阿布", "💪輝仔🐒🐵", "浩浩🐱", "CKB", 
+            "event (凱凱)", "馬健綸", "逸倫", "柏丞 (39計程車)", "端峻", 
+            "🐻🐯 熊虎（大熊）Eric🐻🐯", "🌹俊曉", "🌹𝓜𝓢林罐罐1.0", "克寶J大寶", 
+            "Jordy", "Scott Huang", "𝓜𝓢阿尼尼", "Naker", "VW boyuan", "XH𝓜𝓟🌹", 
+            "阿東", "JimYu", "👍宇哲/Adolph/阿麥❤️", "小金阿傑"
         ]
     };
 
@@ -367,13 +365,17 @@
         }
 
         // 3. 交叉比對
+        // 使用移除空白並轉小寫的方式來進行寬鬆比對
         const normalize = (str) => str.replace(/\s+/g, '').toLowerCase();
+        
+        // 建立體型候選人的 Set 以加速比對
         const typeSet = new Set(typeCandidates.map(name => normalize(name)));
 
         const finalResults = roleCandidates.filter(name => {
             return typeSet.has(normalize(name));
         });
 
+        // 移除重複結果
         const uniqueResults = [...new Set(finalResults)];
 
         // 4. 顯示結果
@@ -383,6 +385,7 @@
             uniqueResults.forEach(name => {
                 const li = document.createElement('li');
                 let roleTag = "其他";
+                // 找出該成員的角色標籤
                 for (const [role, list] of Object.entries(roleData)) {
                     if (list.includes(name)) {
                         roleTag = role;
