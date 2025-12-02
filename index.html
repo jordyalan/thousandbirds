@@ -3,17 +3,153 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>千鶴旅遊AB車時刻表</title>
+  <title>千鶴旅遊AB車時刻表與行程</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    .schedule-box { margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; background: #fafafa; }
+    :root {
+      --primary-color: #007bff;
+      --accent-color: #d9534f;
+      --bg-color: #f4f7f6;
+      --card-bg: #ffffff;
+    }
+
+    body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 20px; background-color: var(--bg-color); color: #333; max-width: 800px; margin: 0 auto;}
+    
+    /* 天氣區塊樣式 */
+    .weather-container {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    .weather-card {
+      flex: 1;
+      min-width: 250px;
+      background: linear-gradient(135deg, #6dd5ed, #2193b0);
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .weather-info h3 { margin: 0 0 5px 0; font-size: 1.1em; }
+    .weather-info p { margin: 0; font-size: 0.9em; opacity: 0.9; }
+    .weather-temp { font-size: 2.2em; font-weight: bold; }
+    .weather-icon { font-size: 2.5em; margin-left: 10px; }
+
+    /* 選單樣式 */
+    select#busSelect {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    /* 時刻表區塊樣式 */
+    .schedule-box { 
+      padding: 20px; 
+      border: none; 
+      border-radius: 12px; 
+      background: var(--card-bg); 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .hidden { display: none; }
-    h2 { margin-top: 0; }
-    /* 小調整：讓時間欄位固定寬度，方便對齊 */
-    .time { display: inline-block; width: 90px; }
+    h2 { margin-top: 0; color: #444; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;}
+    
+    ul { list-style: none; padding: 0; }
+    li { padding: 10px 0; border-bottom: 1px dashed #eee; display: flex; align-items: flex-start; }
+    li:last-child { border-bottom: none; }
+    
+    .time { 
+      display: inline-block; 
+      min-width: 90px; 
+      color: var(--accent-color); 
+      font-weight: bold; 
+      flex-shrink: 0;
+    }
+
+    /* 行程圖文樣式 (C車) */
+    .day-header {
+      background-color: #2c3e50;
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 5px;
+      margin: 20px 0 15px 0;
+      display: inline-block;
+    }
+    
+    .trip-item {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    
+    .trip-img {
+      width: 120px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    
+    .trip-content {
+      flex: 1;
+    }
+    .trip-content strong { color: #2c3e50; font-size: 1.1em; display: block; margin-bottom: 5px; }
+    .trip-content p { margin: 0; font-size: 0.95em; color: #666; line-height: 1.5; }
+
+    /* 響應式調整 */
+    @media (max-width: 600px) {
+      .trip-item { flex-direction: column; }
+      .trip-img { width: 100%; height: 180px; }
+      .weather-container { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- 天氣預報區塊 -->
+  <div class="weather-container">
+    <!-- 台北萬華 (出發地) -->
+    <div class="weather-card" id="weather-taipei">
+      <div class="weather-info">
+        <h3>台北萬華 (出發)</h3>
+        <p id="desc-taipei">載入中...</p>
+      </div>
+      <div style="display:flex; align-items:center;">
+        <span class="weather-temp" id="temp-taipei">--°C</span>
+        <span class="weather-icon" id="icon-taipei">🌥️</span>
+      </div>
+    </div>
+
+    <!-- 台南白河 (目的地) -->
+    <div class="weather-card" id="weather-tainan">
+      <div class="weather-info">
+        <h3>台南白河 (目的地)</h3>
+        <p id="desc-tainan">載入中...</p>
+      </div>
+      <div style="display:flex; align-items:center;">
+        <span class="weather-temp" id="temp-tainan">--°C</span>
+        <span class="weather-icon" id="icon-tainan">☀️</span>
+      </div>
+    </div>
+  </div>
+
   <h1>請選擇車號</h1>
 
   <label for="busSelect" class="sr-only">選擇車次</label>
@@ -21,51 +157,84 @@
     <option value="">請選擇車號...</option>
     <option value="A">A 車</option>
     <option value="B">B 車</option>
-    <option value="C">行程</option>
+    <option value="C">行程內容 (圖文版)</option>
   </select>
 
+  <!-- A 車 -->
   <div id="scheduleA" class="schedule-box hidden">
     <h2>A 車時刻表</h2>
     <ul>
-      <li><span class="time" style="color:#d9534f; font-weight:bold;">6:40 AM</span> 捷運西門站6號出口</li>
-      <li><span class="time" style="color:#d9534f; font-weight:bold;">9:00 AM</span> 臺灣大道（台中商旅）</li>
-      <li><span class="time" style="color:#d9534f; font-weight:bold;">9:20 AM</span> 志忠 王田交流道（阿蓮全精緻自助餐）</li>
-      <li><span class="time" style="color:#d9534f; font-weight:bold;">13:30 PM</span> 關子嶺［千鶴溫泉］（視當天路況）</li>
+      <li><span class="time">6:40 AM</span> 捷運西門站6號出口</li>
+      <li><span class="time">9:00 AM</span> 臺灣大道（台中商旅）</li>
+      <li><span class="time">9:20 AM</span> 志忠 王田交流道（阿蓮全精緻自助餐）</li>
+      <li><span class="time">13:30 PM</span> 關子嶺［千鶴溫泉］（視當天路況）</li>
     </ul>
   </div>
 
+  <!-- B 車 -->
   <div id="scheduleB" class="schedule-box hidden">
     <h2>B 車時刻表</h2>
     <ul>
-      <li><span class="time" style="color:#d9534f; font-weight:bold;">6:40 AM</span> 捷運西門站6號出口</li>
-      <li><span class="time" style="color:#d9534f; font-weight:bold;">7:30 AM</span> 桃園 南崁 長榮航空旁 天香回味火鍋 (桃園市蘆竹區新南路一段128號）</li>
-      <li><span class="time" style="color:#d9534f; font-weight:bold;">8:30 AM</span> 新竹光復路 摩斯漢堡 清華店（新竹市東區光復路二段396號）</li>
-      <li><span class="time" style="color:#d9534f; font-weight:bold;">13:30 PM</span> 關子嶺［千鶴溫泉］（視當天路況）</li>
+      <li><span class="time">6:40 AM</span> 捷運西門站6號出口</li>
+      <li><span class="time">7:30 AM</span> 桃園 南崁 長榮航空旁 天香回味火鍋 <br><small>(桃園市蘆竹區新南路一段128號）</small></li>
+      <li><span class="time">8:30 AM</span> 新竹光復路 摩斯漢堡 清華店 <br><small>（新竹市東區光復路二段396號）</small></li>
+      <li><span class="time">13:30 PM</span> 關子嶺［千鶴溫泉］（視當天路況）</li>
     </ul>
   </div>
 
+  <!-- C 行程 (美化版) -->
   <div id="scheduleC" class="schedule-box hidden">
-    <h2>行程內容</h2>
-    <pre style="white-space: pre-wrap; font-family: inherit;">
-DAY 1
-台北西門出發～沿途接駁～南投竹山［紫南宮］
-午餐：竹山吉祥樓餐廳
-關子嶺［千鶴溫泉］行李入房後隨即進大眾湯開始活動～
-PM 5:30 大門口上遊覽車前往新溪邊餐廳享用晚餐～
-餐後返回千鶴各種PPLL
+    <h2>行程精彩內容</h2>
+    
+    <div class="day-section">
+      <h3 class="day-header">DAY 1：南下祈福與溫泉之旅</h3>
+      
+      <div class="trip-item">
+        <img src="https://raw.githubusercontent.com/jordyalan/thousandbirds/main/temple.jpg?q=80&w=400&auto=format&fit=crop" alt="紫南宮示意圖" class="trip-img">
+        <div class="trip-content">
+          <strong>南投竹山［紫南宮］</strong>
+          <p>早上06:40台北西門出發，沿途接駁。前往香火鼎盛的紫南宮祈求平安發財。</p>
+          <p><em>午餐：竹山吉祥樓餐廳</em></p>
+        </div>
+      </div>
 
-DAY 2
-晨喚 早餐後9:20出發～
-大林［佐登妮絲城堡］遊園參觀
-午餐：園區內自理～
-民雄 KHTOY 絨毛玩偶旗艦館～
-圓滿賦歸！
-    </pre>
+      <div class="trip-item">
+        <img src="https://raw.githubusercontent.com/jordyalan/thousandbirds/main/birds.png?q=80&w=400&auto=format&fit=crop" alt="溫泉示意圖" class="trip-img">
+        <div class="trip-content">
+          <strong>關子嶺［千鶴溫泉］</strong>
+          <p>行李入房後，隨即進入大眾湯享受泥漿溫泉，洗去一身疲憊。</p>
+	<p>自行開車的同學，請在約下午13:10抵達千鶴</p>
+          <p style="margin-top:5px; color:#d9534f;">17:30 大門口上遊覽車前往新溪邊餐廳享用晚餐。<br>餐後返回飯店準備前往戰鬥房。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-section">
+      <h3 class="day-header">DAY 2：夢幻城堡與童趣之旅</h3>
+      
+      <div class="trip-item">
+        <img src="https://raw.githubusercontent.com/jordyalan/thousandbirds/main/castle.jpg?q=80&w=400&auto=format&fit=crop" alt="城堡示意圖" class="trip-img">
+        <div class="trip-content">
+          <strong>大林［佐登妮絲城堡］</strong>
+          <p>晨喚早餐後 9:20 出發。參觀全台最大巴洛克風格美容生技園區，彷彿置身歐洲。</p>
+          <p><em>午餐：園區內自理</em></p>
+        </div>
+      </div>
+
+      <div class="trip-item">
+        <img src="https://raw.githubusercontent.com/jordyalan/thousandbirds/main/toy.png?q=80&w=400&auto=format&fit=crop" alt="玩偶示意圖" class="trip-img">
+        <div class="trip-content">
+          <strong>民雄 KHTOY 絨毛玩偶旗艦館</strong>
+          <p>探索超大絨毛玩偶旗艦館，好拍又好買，大人小孩都愛。</p>
+          <p style="margin-top:10px; font-weight:bold;">行程結束，圓滿賦歸！（預計19:30抵達西門，試車況而定）</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- 合併為單一 <script>，避免重複宣告同一個變數造成錯誤 -->
   <script>
-    // 只在這裡宣告一次變數
+    // --- 頁面邏輯 ---
     const busSelect = document.getElementById('busSelect');
     const scheduleA = document.getElementById('scheduleA');
     const scheduleB = document.getElementById('scheduleB');
@@ -77,25 +246,65 @@ DAY 2
       scheduleC.classList.add('hidden');
     }
 
-    // 初始狀態（如果需要預設選項可在這裡設定）
+    // 初始隱藏
     hideAll();
 
     busSelect.addEventListener('change', () => {
       const value = busSelect.value;
       hideAll();
-
       if (value === 'A') scheduleA.classList.remove('hidden');
       if (value === 'B') scheduleB.classList.remove('hidden');
       if (value === 'C') scheduleC.classList.remove('hidden');
     });
+    
+    // --- 天氣 API 邏輯 (使用 Open-Meteo) ---
+    async function fetchWeather() {
+        // 萬華座標 (約 25.03, 121.50) / 白河座標 (約 23.35, 120.48)
+        const url = "https://api.open-meteo.com/v1/forecast?latitude=25.03,23.35&longitude=121.50,120.48&current_weather=true&timezone=Asia%2FTaipei";
+        
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            // 處理萬華 (Index 0)
+            updateWeatherCard('taipei', data[0].current_weather);
+            // 處理白河 (Index 1)
+            updateWeatherCard('tainan', data[1].current_weather);
+            
+        } catch (error) {
+            console.error("天氣載入失敗:", error);
+            document.getElementById('desc-taipei').textContent = "暫無資料";
+            document.getElementById('desc-tainan').textContent = "暫無資料";
+        }
+    }
 
-    // 可選：支援鍵盤快速切換（左右/上下切換示範）
-    busSelect.addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') {
-        const event = new Event('change');
-        busSelect.dispatchEvent(event);
-      }
-    });
+    function updateWeatherCard(loc, weatherData) {
+        const tempElem = document.getElementById(`temp-${loc}`);
+        const iconElem = document.getElementById(`icon-${loc}`);
+        const descElem = document.getElementById(`desc-${loc}`);
+        
+        const temp = weatherData.temperature;
+        const code = weatherData.weathercode;
+        
+        tempElem.textContent = `${temp}°C`;
+        
+        // 簡易 WMO Code 轉換
+        let icon = "☁️";
+        let desc = "多雲";
+        
+        if (code === 0) { icon = "☀️"; desc = "晴朗"; }
+        else if (code >= 1 && code <= 3) { icon = "⛅"; desc = "多雲時晴"; }
+        else if (code >= 45 && code <= 48) { icon = "🌫️"; desc = "有霧"; }
+        else if (code >= 51 && code <= 67) { icon = "🌧️"; desc = "有雨"; }
+        else if (code >= 80 && code <= 99) { icon = "⛈️"; desc = "雷陣雨"; }
+        
+        iconElem.textContent = icon;
+        descElem.textContent = desc;
+    }
+
+    // 啟動天氣查詢
+    fetchWeather();
+
   </script>
 </body>
 </html>
