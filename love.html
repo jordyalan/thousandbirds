@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的理想ㄆ友名單 (名單更新版)</title>
+    <title>我的理想ㄆ友名單 (最新名單版)</title>
     <style>
         body {
             font-family: "Microsoft JhengHei", "Heiti TC", Arial, sans-serif;
@@ -210,14 +210,16 @@
     </div>
     
     <div class="note">
-        <strong>更新說明：</strong><br>
-        資料庫已根據最新文件進行同步更新。<br>
-        搜尋邏輯已調整：選擇「都可」時，會嚴格列出「X喜X」及「熊猴都可」的名單。
+        <strong>邏輯說明：</strong><br>
+        • 角色篩選：嚴格比對您的角色需求 (如: 1號只會看到 0號與不分)。<br>
+        • 體型篩選：
+        若選喜歡「都可」，會為您找出「喜歡您這種體型」以及「雙方都可」的人選。<br>
+        (例如：您是猴+喜歡都可 → 會列出「猴喜猴」、「熊喜猴」以及「熊猴都可」的名單)
     </div>
 </div>
 
 <script>
-    // --- 資料庫 (依照最新檔案更新) ---
+    // --- 資料庫 (根據最新檔案更新) ---
     
     const roleData = {
         "1號": [
@@ -233,12 +235,13 @@
             "XH🌹", "㫻ㄎㄨㄣˋ寶", "Jordy", "𝓜𝓢阿尼尼", "阿東"
         ],
         "不分": [
-            "傻蛋", "Huang Chang", "XuezheWu 學哲", "♒️Jungle", "ting tsai", "Nick&린지우", 
-            "不分George", "Rex~和", "Urban", "不分阿布", "Dindon Lin", "Danny", "aaron", 
-            "許哲維", "山姆🐳", "YusiangHong", "夏天+", "鄧 - Ru Cin", "Juan", "建億", 
-            "馬健綸", "撼震", "威廉", "Francis  🐢❤️🐻🐷", "翔太 / Sean", "💪輝仔🐒🐵", 
-            "羅(Roger)", "Scott Huang", "名舜 Tim", "尤英任❄", "Foodpanda外送員-小雞", 
-            "Zhan Wen", "Naker", "黑皮の達", "VW boyuan", "👍宇哲/Adolph/阿麥❤️", "小皓", 
+            "傻蛋", "Huang Chang", "XuezheWu 學哲", "♒️Jungle", "ting tsai", 
+            "Nick&린지우", "不分George", "Rex~和", "Urban", "不分阿布", "Dindon Lin", 
+            "Danny", "aaron", "許哲維", "山姆🐳", "YusiangHong", "夏天+", 
+            "鄧 - Ru Cin", "Juan", "建億", "馬健綸", "撼震", "威廉", 
+            "Francis  🐢❤️🐻🐷", "翔太 / Sean", "💪輝仔🐒🐵", "羅(Roger)", 
+            "Scott Huang", "名舜 Tim", "尤英任❄", "Foodpanda外送員-小雞", "Zhan Wen", 
+            "Naker", "黑皮の達", "VW boyuan", "👍宇哲/Adolph/阿麥❤️", "小皓", 
             "約書亞", "資訊分組-Wei仔", "𝓛𝓾𝓬𝓪𝓼 宥朋", "🐻🐯 熊虎（大熊）Eric🐻🐯"
         ],
         "Side": [
@@ -249,7 +252,6 @@
         ]
     };
 
-    // ★ 體型資料 (依照最新檔案更新) ★
     const typeData = {
         "熊喜熊": [
             "傻蛋", "不分George", "𝓛𝓾𝓬𝓪𝓼 宥朋", "撼震"
@@ -257,14 +259,14 @@
         
         "熊喜猴": [
             "詹Cos", "Dindon Lin", "Heng", "Nick", "阿翰", "建億", "Rex~和", 
-            "奧斯卡²", "Zhan Wen", "黑皮の達", "鴻星🌟-HongXing", "小皓", "DK",
+            "奧斯卡²", "Zhan Wen", "黑皮の達", "鴻星🌟-HongXing", "小皓", "DK", 
             "約書亞", "🌹𝓜𝓢 娃娃林"
         ],
         
         "猴喜熊": [
             "烏龍", "林恒旭", "耀天", "山姆🐳", "鄧 - Ru Cin", "陳威成", 
-            "Francis  🐢❤️🐻🐷", "尤英任❄", "名舜 Tim", "Parker Yang", "資訊分組-Wei仔", 
-            "勳", "Eric（俊）"
+            "Francis  🐢❤️🐻🐷", "尤英任❄", "名舜 Tim", "Parker Yang", 
+            "資訊分組-Wei仔", "勳", "Eric（俊）"
         ],
         
         "猴喜猴": [
@@ -276,33 +278,30 @@
         ],
         
         "熊猴都可": [
-            "勺弘", "保安", "Huang Chang", "ting tsai", "♒️Jungle", "Nick&린지우", "阿布0", 
-            "許哲維", "阿任", "XuezheWu 學哲", "貓貓貓", "毛怪Mao(*'へ'*)", "Alex吳維", 
-            "🌹Lucas竣🌹", "不分阿布", "💪輝仔🐒🐵", "浩浩🐱", "CKB", "event(凱凱)", 
-            "馬健綸", "柏丞 (39計程車)", "端峻", "🐻🐯 熊虎（大熊）Eric🐻🐯", "🌹俊曉", 
-            "🌹𝓜𝓢林罐罐1.0", "克寶J大寶", "Jordy", "Scott Huang", "Foodpanda外送員-小雞", 
-            "𝓜𝓢阿尼尼", "Naker", "VW boyuan", "XH🌹", "阿東", "JimYu", 
-            "👍宇哲/Adolph/阿麥❤️", "小金阿傑"
+            "勺弘", "保安", "Huang Chang", "ting tsai", "♒️Jungle", "Nick&린지우", 
+            "阿布0", "許哲維", "阿任", "XuezheWu 學哲", "貓貓貓", "毛怪Mao(*'へ'*)", 
+            "Alex吳維", "🌹Lucas竣🌹", "不分阿布", "💪輝仔🐒🐵", "浩浩🐱", "CKB", 
+            "event(凱凱)", "馬健綸", "柏丞 (39計程車)", "端峻", 
+            "🐻🐯 熊虎（大熊）Eric🐻🐯", "🌹俊曉", "🌹𝓜𝓢林罐罐1.0", "克寶J大寶", 
+            "Jordy", "Scott Huang", "Foodpanda外送員-小雞", "𝓜𝓢阿尼尼", "Naker", 
+            "VW boyuan", "XH🌹", "阿東", "JimYu", "👍宇哲/Adolph/阿麥❤️", "小金阿傑"
         ]
     };
 
-    // 計算有效資料庫人數的功能
+    // 計算有效資料庫人數的功能 (交集人數)
     function getValidDatabaseCount() {
         const normalize = (str) => str.replace(/\s+/g, '').toLowerCase();
 
-        // 1. 取得所有角色名單中的不重複人名
         let allRolePeople = new Set();
         Object.values(roleData).forEach(list => {
             list.forEach(name => allRolePeople.add(normalize(name)));
         });
 
-        // 2. 取得所有體型名單中的不重複人名
         let allTypePeople = new Set();
         Object.values(typeData).forEach(list => {
             list.forEach(name => allTypePeople.add(normalize(name)));
         });
 
-        // 3. 取交集
         let validCount = 0;
         allRolePeople.forEach(name => {
             if (allTypePeople.has(name)) {
@@ -332,54 +331,61 @@
         // 1. 角色篩選邏輯
         let roleCandidates = [];
         if (userRole === "1") {
-            // 一號列出: 不分、0號
+            // 一號列出不分、0號
             roleCandidates = [...roleData["不分"], ...roleData["0號"]];
         } else if (userRole === "0") {
-            // 0號列出: 不分、一號
+            // 0號列出不分、一號
             roleCandidates = [...roleData["不分"], ...roleData["1號"]];
         } else if (userRole === "0.5") { 
-            // 不分列出: 一號、0號、不分
+            // 不分列出一號、0號、不分
             roleCandidates = [...roleData["1號"], ...roleData["0號"], ...roleData["不分"]];
         } else if (userRole === "Side") {
-            // Side列出: Side
+            // Side列出Side
             roleCandidates = [...roleData["Side"]];
         } else if (userRole === "69") {
-            // 69列出: 69
+            // 69列出69
             roleCandidates = [...roleData["純69"]];
         }
 
-        // 2. 體型篩選邏輯
+        // 2. 體型篩選邏輯 (根據使用者指示)
         let typeCandidates = [];
 
         if (myBody === "熊" && prefBody === "熊") {
-            // 我熊喜熊 -> 找 熊喜熊
+            // 第二個選熊，第三個選熊 → 列出熊喜熊
             typeCandidates = [...typeData["熊喜熊"]];
         } 
         else if (myBody === "熊" && prefBody === "猴") {
-            // 我熊喜猴 -> 找 猴喜熊 (對方是猴，喜歡熊)
+            // 第二個選熊，第三個選猴 → 列出猴喜熊 (對方是猴子喜歡熊)
             typeCandidates = [...typeData["猴喜熊"]]; 
         } 
         else if (myBody === "猴" && prefBody === "熊") {
-            // 我猴喜熊 -> 找 熊喜猴 (對方是熊，喜歡猴)
+            // 第二個選猴，第三個選熊 → 列出熊喜猴 (對方是熊喜歡猴)
             typeCandidates = [...typeData["熊喜猴"]]; 
         } 
         else if (myBody === "猴" && prefBody === "猴") {
-            // 我猴喜猴 -> 找 猴喜猴
+            // 第二個選猴，第三個選猴 → 列出猴喜猴
             typeCandidates = [...typeData["猴喜猴"]];
         } 
         else if (myBody === "猴" && prefBody === "都可") {
-            // 我猴喜都可 -> 列出 猴喜猴 以及 熊猴都可
-            typeCandidates = [...typeData["猴喜猴"], ...typeData["熊猴都可"]];
+            // 第二個選猴，第三個選都可 → 列出猴喜猴、熊喜猴、以及熊猴都可
+            typeCandidates = [
+                ...typeData["猴喜猴"], 
+                ...typeData["熊喜猴"], 
+                ...typeData["熊猴都可"]
+            ];
         } 
         else if (myBody === "熊" && prefBody === "都可") {
-            // 我熊喜都可 -> 列出 熊喜熊 以及 熊猴都可
-            typeCandidates = [...typeData["熊喜熊"], ...typeData["熊猴都可"]];
+            // 第二個選熊，第三個選都可 → 列出熊喜熊、猴喜熊、以及熊猴都可
+            typeCandidates = [
+                ...typeData["熊喜熊"], 
+                ...typeData["猴喜熊"], 
+                ...typeData["熊猴都可"]
+            ];
         }
 
-        // 3. 交叉比對
+        // 3. 交叉比對 (交集)
         const normalize = (str) => str.replace(/\s+/g, '').toLowerCase();
         
-        // 建立體型候選人的 Set 以加速比對
         const typeSet = new Set(typeCandidates.map(name => normalize(name)));
 
         const finalResults = roleCandidates.filter(name => {
@@ -396,7 +402,7 @@
             uniqueResults.forEach(name => {
                 const li = document.createElement('li');
                 let roleTag = "其他";
-                // 找出該成員的角色標籤
+                // 找出該成員的角色標籤，為了顯示好看
                 for (const [role, list] of Object.entries(roleData)) {
                     if (list.includes(name)) {
                         roleTag = role;
@@ -420,7 +426,7 @@
 
         // 統計
         const totalValidCount = getValidDatabaseCount();
-        totalDbFooter.innerHTML = `📊 目前資料庫有效總人數：${totalValidCount} 位`;
+        totalDbFooter.innerHTML = `📊 目前資料庫有效交集總人數：${totalValidCount} 位`;
     }
 </script>
 
