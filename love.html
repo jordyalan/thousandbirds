@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的理想ㄆ友名單 (最新修正版)</title>
+    <title>我的理想ㄆ友名單 (名單更新版)</title>
     <style>
         body {
             font-family: "Microsoft JhengHei", "Heiti TC", Arial, sans-serif;
@@ -211,34 +211,35 @@
     
     <div class="note">
         <strong>更新說明：</strong><br>
-        已修正資料庫：將「史宇弓ㄙ」正確加入名單，確保篩選功能正常。
+        資料庫已根據最新文件進行同步更新。<br>
+        搜尋邏輯已調整：選擇「都可」時，會嚴格列出「X喜X」及「熊猴都可」的名單。
     </div>
 </div>
 
 <script>
-    // --- 資料庫 (已修正) ---
+    // --- 資料庫 (依照最新檔案更新) ---
     
     const roleData = {
         "1號": [
-            "小金阿傑", "詹Cos", "小秉", "阿任", "George1", "By-n", "志忠", "阿翰", 
-            "🌹𝓜𝓢林罐罐1.0", "史宇弓ㄙ", "奧斯卡²", "耀天", "陳威成", "Parker Yang", 
+            "烏龍", "小金阿傑", "詹Cos", "小秉", "阿任", "George1", "By-n", "志忠", "阿翰", 
+            "🌹𝓜𝓢林罐罐1.0", "史宏弓ㄙ", "奧斯卡²", "耀天", "陳威成", "Parker Yang", 
             "奧嵐多", "\"凱\"(^_-)", "鴻星🌟-HongXing", "DK", "勳", "JimYu", 
-            "@🌹𝓜𝓢 娃娃林"
+            "🌹𝓜𝓢 娃娃林", "李孟澤"
         ],
         "0號": [
-            "Eric（俊）", "Nick", "Eddy暐-起心動念", "聒噪", "🐟", "貓貓貓", 
+            "勺弘", "Eric（俊）", "Nick", "Eddy暐-起心動念", "聒噪", "🐟", "貓貓貓", 
             "毛怪Mao(*'へ'*)", "阿布0", "保安", "🌹Lucas竣🌹", "浩浩🐱", "Piccolo埃皮", 
-            "CKB", "event(凱凱)", "逸倫", "柏丞 (39計程車)", "Alex吳維", "🌹俊曉", 
-            "XH𝓜𝓟🌹", "㫻ㄎㄨㄣˋ寶", "Jordy", "𝓜𝓢阿尼尼", "阿東"
+            "CKB", "event(凱凱)", "柏丞 (39計程車)", "Alex吳維", "🌹俊曉", 
+            "XH🌹", "㫻ㄎㄨㄣˋ寶", "Jordy", "𝓜𝓢阿尼尼", "阿東"
         ],
         "不分": [
-            "♒️Jungle", "ting tsai", "Nick&린지우", "不分George", "Rex~和", "Urban", 
-            "不分阿布", "Dindon Lin", "Danny", "XuezheWu學哲", "aaron", "許哲維", 
-            "山姆🐳", "YusiangHong", "夏天+", "🍃", "Juan", "建億", "馬健綸", 
-            "撼震", "威廉", "Francis  🐢❤️🐻🐷", "翔太 / Sean", "💪輝仔🐒🐵", 
-            "林小許", "羅(Roger)", "Scott Huang", "名舜 Tim", "尤英任❄", "Zhan Wen", 
-            "Naker", "黑皮の達", "VW boyuan", "👍宇哲/Adolph/阿麥❤️", "小皓", 
-            "約書亞", "資訊分組-Wei仔", "𝓛𝓾𝓬𝓪𝓼 宥朋"
+            "傻蛋", "Huang Chang", "XuezheWu 學哲", "♒️Jungle", "ting tsai", "Nick&린지우", 
+            "不分George", "Rex~和", "Urban", "不分阿布", "Dindon Lin", "Danny", "aaron", 
+            "許哲維", "山姆🐳", "YusiangHong", "夏天+", "鄧 - Ru Cin", "Juan", "建億", 
+            "馬健綸", "撼震", "威廉", "Francis  🐢❤️🐻🐷", "翔太 / Sean", "💪輝仔🐒🐵", 
+            "羅(Roger)", "Scott Huang", "名舜 Tim", "尤英任❄", "Foodpanda外送員-小雞", 
+            "Zhan Wen", "Naker", "黑皮の達", "VW boyuan", "👍宇哲/Adolph/阿麥❤️", "小皓", 
+            "約書亞", "資訊分組-Wei仔", "𝓛𝓾𝓬𝓪𝓼 宥朋", "🐻🐯 熊虎（大熊）Eric🐻🐯"
         ],
         "Side": [
             "Weiting", "劉亦軒(小嵐Blue)", "端峻", "دDavid ♂茶米♂"
@@ -248,39 +249,40 @@
         ]
     };
 
-    // ★ 體型資料 ★
+    // ★ 體型資料 (依照最新檔案更新) ★
     const typeData = {
         "熊喜熊": [
-            "不分George", "𝓛𝓾𝓬𝓪𝓼 宥朋", "撼震"
+            "傻蛋", "不分George", "𝓛𝓾𝓬𝓪𝓼 宥朋", "撼震"
         ],
         
         "熊喜猴": [
-            "詹Cos", "Dindon Lin", "Heng", "保安", "Nick", "阿翰", "建億", 
-            "Rex~和", "奧斯卡²", "Zhan Wen", "黑皮の達", "鴻星🌟-HongXing", 
-            "小皓", "DK", "約書亞", "🌹𝓜𝓢 娃娃林"
+            "詹Cos", "Dindon Lin", "Heng", "Nick", "阿翰", "建億", "Rex~和", 
+            "奧斯卡²", "Zhan Wen", "黑皮の達", "鴻星🌟-HongXing", "小皓", "DK", 
+            "約書亞", "🌹𝓜𝓢 娃娃林"
         ],
         
         "猴喜熊": [
-            "林恒旭", "耀天", "山姆🐳", "🍃", "陳威成", "Francis  🐢❤️🐻🐷", 
-            "尤英任❄", "名舜 Tim", "Parker Yang", "資訊分組-Wei仔", "勳"
+            "烏龍", "林恒旭", "耀天", "山姆🐳", "鄧 - Ru Cin", "陳威成", 
+            "Francis  🐢❤️🐻🐷", "尤英任❄", "名舜 Tim", "Parker Yang", "資訊分組-Wei仔", 
+            "勳", "Eric（俊）"
         ],
         
         "猴喜猴": [
             "Eddy暐-起心動念", "翔太 / Sean", "George1", "Danny", "aaron", "Weiting", 
             "聒噪", "YusiangHong", "By-n", "🐟", "李孟澤", "夏天+", "Piccolo埃皮", 
-            "志忠", "Juan", "小秉", "劉亦軒(小嵐Blue)", "威廉", "史宇弓ㄙ", 
-            "羅 (Roger)", "دDavid ♂茶米♂", "㫻ㄎㄨㄣˋ寶", "奧嵐多", "Urban", 
-            "“凱”（^_-）"
+            "志忠", "Juan", "小秉", "劉亦軒(小嵐Blue)", "威廉", "史宏弓ㄙ", 
+            "羅(Roger)", "دDavid ♂茶米♂", "㫻ㄎㄨㄣˋ寶", "奧嵐多", "Urban", 
+            "\"凱\"(^_-)"
         ],
         
         "熊猴都可": [
-            "Eric（俊）", "ting tsai", "♒️Jungle", "Nick&린지우", "阿布0", "許哲維", 
-            "阿任", "XuezheWu 學哲", "貓貓貓", "毛怪Mao(*'へ'*)", "Alex 吳維", 
-            "🌹Lucas竣🌹", "不分阿布", "💪輝仔🐒🐵", "浩浩🐱", "CKB", 
-            "event (凱凱)", "馬健綸", "逸倫", "柏丞 (39計程車)", "端峻", 
-            "🐻🐯 熊虎（大熊）Eric🐻🐯", "🌹俊曉", "🌹𝓜𝓢林罐罐1.0", "克寶J大寶", 
-            "Jordy", "Scott Huang", "𝓜𝓢阿尼尼", "Naker", "VW boyuan", "XH𝓜𝓟🌹", 
-            "阿東", "JimYu", "👍宇哲/Adolph/阿麥❤️", "小金阿傑"
+            "勺弘", "保安", "Huang Chang", "ting tsai", "♒️Jungle", "Nick&린지우", "阿布0", 
+            "許哲維", "阿任", "XuezheWu 學哲", "貓貓貓", "毛怪Mao(*'へ'*)", "Alex吳維", 
+            "🌹Lucas竣🌹", "不分阿布", "💪輝仔🐒🐵", "浩浩🐱", "CKB", "event(凱凱)", 
+            "馬健綸", "柏丞 (39計程車)", "端峻", "🐻🐯 熊虎（大熊）Eric🐻🐯", "🌹俊曉", 
+            "🌹𝓜𝓢林罐罐1.0", "克寶J大寶", "Jordy", "Scott Huang", "Foodpanda外送員-小雞", 
+            "𝓜𝓢阿尼尼", "Naker", "VW boyuan", "XH🌹", "阿東", "JimYu", 
+            "👍宇哲/Adolph/阿麥❤️", "小金阿傑"
         ]
     };
 
@@ -327,44 +329,54 @@
         totalDbFooter.innerHTML = "";
         recommendationBox.style.display = "none";
 
-        // 1. 角色篩選
+        // 1. 角色篩選邏輯
         let roleCandidates = [];
         if (userRole === "1") {
+            // 一號列出: 不分、0號
             roleCandidates = [...roleData["不分"], ...roleData["0號"]];
         } else if (userRole === "0") {
+            // 0號列出: 不分、一號
             roleCandidates = [...roleData["不分"], ...roleData["1號"]];
         } else if (userRole === "0.5") { 
+            // 不分列出: 一號、0號、不分
             roleCandidates = [...roleData["1號"], ...roleData["0號"], ...roleData["不分"]];
         } else if (userRole === "Side") {
+            // Side列出: Side
             roleCandidates = [...roleData["Side"]];
         } else if (userRole === "69") {
+            // 69列出: 69
             roleCandidates = [...roleData["純69"]];
         }
 
-        // 2. 體型篩選
+        // 2. 體型篩選邏輯
         let typeCandidates = [];
 
         if (myBody === "熊" && prefBody === "熊") {
+            // 我熊喜熊 -> 找 熊喜熊
             typeCandidates = [...typeData["熊喜熊"]];
         } 
         else if (myBody === "熊" && prefBody === "猴") {
+            // 我熊喜猴 -> 找 猴喜熊 (對方是猴，喜歡熊)
             typeCandidates = [...typeData["猴喜熊"]]; 
         } 
         else if (myBody === "猴" && prefBody === "熊") {
+            // 我猴喜熊 -> 找 熊喜猴 (對方是熊，喜歡猴)
             typeCandidates = [...typeData["熊喜猴"]]; 
         } 
         else if (myBody === "猴" && prefBody === "猴") {
+            // 我猴喜猴 -> 找 猴喜猴
             typeCandidates = [...typeData["猴喜猴"]];
         } 
         else if (myBody === "猴" && prefBody === "都可") {
-            typeCandidates = [...typeData["猴喜猴"], ...typeData["熊猴都可"], ...typeData["熊喜猴"]];
+            // 我猴喜都可 -> 列出 猴喜猴 以及 熊猴都可
+            typeCandidates = [...typeData["猴喜猴"], ...typeData["熊猴都可"]];
         } 
         else if (myBody === "熊" && prefBody === "都可") {
-            typeCandidates = [...typeData["熊喜熊"], ...typeData["熊猴都可"], ...typeData["猴喜熊"]];
+            // 我熊喜都可 -> 列出 熊喜熊 以及 熊猴都可
+            typeCandidates = [...typeData["熊喜熊"], ...typeData["熊猴都可"]];
         }
 
         // 3. 交叉比對
-        // 使用移除空白並轉小寫的方式來進行寬鬆比對
         const normalize = (str) => str.replace(/\s+/g, '').toLowerCase();
         
         // 建立體型候選人的 Set 以加速比對
